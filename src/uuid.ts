@@ -1,5 +1,5 @@
 //
-//  index.ts
+//  uuid.ts
 //
 //  The MIT License
 //  Copyright (c) 2021 - 2023 O2ter Limited. All rights reserved.
@@ -23,8 +23,8 @@
 //  THE SOFTWARE.
 //
 
-export * from './base64';
-export * from './buffer';
-export * from './hmac';
-export * from './random';
-export * from './uuid';
+import type { randomUUID as _randomUUID } from 'crypto';
+
+export const randomUUID = typeof window === 'undefined' ?
+  require('crypto').randomUUID as typeof _randomUUID :
+  () => window.crypto.randomUUID();
