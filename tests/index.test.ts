@@ -25,8 +25,29 @@
 
 import { expect, test } from '@jest/globals';
 import { Hamc } from '../src';
+import { sha1, sha256, sha384, sha512 } from '../src/digest';
 
 test('test hmac', async () => {
   const buffer = await Hamc('sha256', 'abc', 'def');
   expect(Buffer.from(buffer).toString('base64')).toBe('IOvA8JNERwE081BA9j6pix2OQUISlJ7lxQBCnRXqsIE=');
+});
+
+test('test sha1', async () => {
+  const buffer = await sha1('hello');
+  expect(Buffer.from(buffer).toString('hex')).toBe('aaf4c61ddcc5e8a2dabede0f3b482cd9aea9434d');
+});
+
+test('test sha256', async () => {
+  const buffer = await sha256('hello');
+  expect(Buffer.from(buffer).toString('hex')).toBe('2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824');
+});
+
+test('test sha384', async () => {
+  const buffer = await sha384('hello');
+  expect(Buffer.from(buffer).toString('hex')).toBe('59e1748777448c69de6b800d7a33bbfb9ff1b463e44354c3553bcdb9c666fa90125a3c79f90397bdf5f6a13de828684f');
+});
+
+test('test sha512', async () => {
+  const buffer = await sha512('hello');
+  expect(Buffer.from(buffer).toString('hex')).toBe('9b71d224bd62f3785d96d46ad3ea3d73319bfbc2890caadae2dff72519673ca72323c3d99ba5c11d7c7acc6e14b8c5da0c4663475c2e5c3adef46f73bcdec043');
 });
