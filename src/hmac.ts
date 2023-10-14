@@ -50,7 +50,7 @@ const NodeHamc = async (
   secret: BinaryData | string,
   data: BinaryData | string,
 ) => {
-  const { createHmac } = await import('crypto');
+  const { createHmac } = await import('node:crypto');
   const _secret = _.isString(secret) ? strToBuffer(secret) : secret;
   const _data = _.isString(data) ? strToBuffer(data) : data;
   const hmac = createHmac(alg, binaryToBuffer(_secret));

@@ -43,7 +43,7 @@ const WebDigest = (alg: keyof typeof algMap) => (
 const NodeDigest = (alg: keyof typeof algMap) => async (
   message: BinaryData | string,
 ) => {
-  const { createHash } = await import('crypto');
+  const { createHash } = await import('node:crypto');
   const _message = _.isString(message) ? strToBuffer(message) : message;
   const hash = createHash(alg);
   hash.update(binaryToBuffer(_message));

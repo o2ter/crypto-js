@@ -23,8 +23,8 @@
 //  THE SOFTWARE.
 //
 
-import type { randomUUID as _randomUUID } from 'crypto';
+import type { randomUUID as _randomUUID } from 'node:crypto';
 
 export const randomUUID = typeof window === 'undefined' ?
-  require('crypto').randomUUID as typeof _randomUUID :
+  require('node:crypto').randomUUID as typeof _randomUUID :
   () => window.crypto.randomUUID();
