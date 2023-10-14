@@ -24,6 +24,7 @@
 //
 
 import _ from 'lodash';
+import type { createHmac } from 'node:crypto';
 import { binaryToBuffer, strToBuffer } from './buffer';
 
 const algMap = {
@@ -50,10 +51,10 @@ const NodeHamc = async (
   secret: BinaryData | string,
   data: BinaryData | string,
 ) => {
-  const { createHmac } = await import('node:crypto');
+  const _createHmac = require('node:crypto').createHmac as typeof createHmac;
   const _secret = _.isString(secret) ? strToBuffer(secret) : secret;
   const _data = _.isString(data) ? strToBuffer(data) : data;
-  const hmac = createHmac(alg, binaryToBuffer(_secret));
+  const hmac = _createHmac(alg, binaryToBuffer(_secret));
   hmac.update(binaryToBuffer(_data));
   return hmac.digest();
 }

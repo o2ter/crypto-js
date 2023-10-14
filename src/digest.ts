@@ -24,6 +24,7 @@
 //
 
 import _ from 'lodash';
+import type { createHash } from 'node:crypto';
 import { binaryToBuffer, strToBuffer } from './buffer';
 
 const algMap = {
@@ -43,9 +44,9 @@ const WebDigest = (alg: keyof typeof algMap) => (
 const NodeDigest = (alg: keyof typeof algMap) => async (
   message: BinaryData | string,
 ) => {
-  const { createHash } = await import('node:crypto');
+  const _createHash = require('node:crypto').createHash as typeof createHash;
   const _message = _.isString(message) ? strToBuffer(message) : message;
-  const hash = createHash(alg);
+  const hash = _createHash(alg);
   hash.update(binaryToBuffer(_message));
   return hash.digest();
 }
