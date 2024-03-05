@@ -16,7 +16,7 @@
     "test": "jest --detectOpenHandles"
   },
   "dependencies": {
-    "@o2ter/utils-js": "^0.0.2",
+    "@o2ter/utils-js": "^0.0.3",
     "lodash": ">=4.17.21"
   },
   "devDependencies": {
