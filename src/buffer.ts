@@ -34,9 +34,10 @@ import {
 } from '@o2ter/utils-js';
 
 type _Buffer = BinaryData | string;
+export type Input = Awaitable<_Buffer | Iterable<_Buffer> | AsyncIterable<_Buffer>>;
 
 export const WebResolveBuffer = async (
-  input: Awaitable<_Buffer | Iterable<_Buffer> | AsyncIterable<_Buffer>>,
+  input: Input,
 ) => {
 
   if (_.isString(input)) return stringToBuffer(input);
