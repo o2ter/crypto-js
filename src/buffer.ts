@@ -30,11 +30,12 @@ import {
   stringToBuffer,
   iterableToArray,
   asyncIterableToArray,
+  isBinaryData,
 } from '@o2ter/utils-js';
 
 type _Buffer = BinaryData | string;
 
-const WebResolveBuffer = async (
+export const WebResolveBuffer = async (
   input: Awaitable<_Buffer | Iterable<_Buffer> | AsyncIterable<_Buffer>>,
 ) => {
 
@@ -49,7 +50,20 @@ const WebResolveBuffer = async (
     return Buffer.concat(_.map(buffers, x => _.isString(x) ? stringToBuffer(x) : binaryToBuffer(x)))
   }
 
+  if (isBinaryData(input)) return binaryToBuffer(input);
+
   const buffer = await input;
 
+  if (_.isString(buffer)) return stringToBuffer(buffer);
 
+  if (Symbol.iterator in buffer) {
+    const buffers = iterableToArray(buffer);
+    return Buffer.concat(_.map(buffers, x => _.isString(x) ? stringToBuffer(x) : binaryToBuffer(x)))
+  }
+  if (Symbol.asyncIterator in buffer) {
+    const buffers = await asyncIterableToArray(buffer);
+    return Buffer.concat(_.map(buffers, x => _.isString(x) ? stringToBuffer(x) : binaryToBuffer(x)))
+  }
+
+  return binaryToBuffer(buffer);
 }
