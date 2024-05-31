@@ -34,14 +34,10 @@ import {
 } from '@o2ter/utils-js';
 
 type _Buffer = BinaryData | string;
-export type Input = Awaitable<_Buffer | Iterable<_Buffer> | AsyncIterable<_Buffer>>;
+export type Input = _Buffer | Iterable<_Buffer> | AsyncIterable<_Buffer>;
 
-export const WebResolveBuffer = async (
-  input: Input,
-) => {
-
+const _ResolveBuffer = async (input: Input) => { 
   if (_.isString(input)) return stringToBuffer(input);
-
   if (Symbol.iterator in input) {
     const buffers = iterableToArray(input);
     return Buffer.concat(_.map(buffers, x => _.isString(x) ? stringToBuffer(x) : binaryToBuffer(x)))
@@ -50,21 +46,17 @@ export const WebResolveBuffer = async (
     const buffers = await asyncIterableToArray(input);
     return Buffer.concat(_.map(buffers, x => _.isString(x) ? stringToBuffer(x) : binaryToBuffer(x)))
   }
+  return binaryToBuffer(input);
+}
 
-  if (isBinaryData(input)) return binaryToBuffer(input);
-
-  const buffer = await input;
-
-  if (_.isString(buffer)) return stringToBuffer(buffer);
-
-  if (Symbol.iterator in buffer) {
-    const buffers = iterableToArray(buffer);
-    return Buffer.concat(_.map(buffers, x => _.isString(x) ? stringToBuffer(x) : binaryToBuffer(x)))
+export const WebResolveBuffer = async (
+  input: Awaitable<Input>,
+) => {
+  if (
+    _.isString(input) || isBinaryData(input) ||
+    Symbol.iterator in input || Symbol.asyncIterator in input
+  ) {
+    return _ResolveBuffer(input);
   }
-  if (Symbol.asyncIterator in buffer) {
-    const buffers = await asyncIterableToArray(buffer);
-    return Buffer.concat(_.map(buffers, x => _.isString(x) ? stringToBuffer(x) : binaryToBuffer(x)))
-  }
-
-  return binaryToBuffer(buffer);
+  return _ResolveBuffer(await input);
 }
