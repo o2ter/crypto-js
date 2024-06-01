@@ -26,6 +26,7 @@
 import _ from 'lodash';
 import type { createHmac } from 'node:crypto';
 import { binaryToBuffer, stringToBuffer } from '@o2ter/utils-js';
+import { Message, resolveBuffer, resolveBufferStream } from './buffer';
 
 const algMap = {
   'sha1': 'SHA-1',
@@ -37,11 +38,11 @@ const algMap = {
 const WebHamc = async (
   alg: keyof typeof algMap,
   secret: BinaryData | string,
-  data: BinaryData | string,
+  data: Message,
 ) => {
   const algorithm = { name: 'HMAC', hash: algMap[alg] };
   const _secret = _.isString(secret) ? stringToBuffer(secret) : secret;
-  const _data = _.isString(data) ? stringToBuffer(data) : data;
+  const _data = await resolveBuffer(data);
   const key = await window.crypto.subtle.importKey('raw', _secret, algorithm, false, ['sign']);
   return crypto.subtle.sign(algorithm.name, key, _data);
 }
@@ -49,13 +50,12 @@ const WebHamc = async (
 const NodeHamc = async (
   alg: keyof typeof algMap,
   secret: BinaryData | string,
-  data: BinaryData | string,
+  data: Message,
 ) => {
   const _createHmac = require('node:crypto').createHmac as typeof createHmac;
   const _secret = _.isString(secret) ? stringToBuffer(secret) : secret;
-  const _data = _.isString(data) ? stringToBuffer(data) : data;
   const hmac = _createHmac(alg, binaryToBuffer(_secret));
-  hmac.update(binaryToBuffer(_data));
+  for await (const chunk of resolveBufferStream(data)) hmac.update(chunk);
   return hmac.digest();
 }
 

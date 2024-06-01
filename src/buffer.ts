@@ -34,29 +34,38 @@ import {
 } from '@o2ter/utils-js';
 
 type _Buffer = BinaryData | string;
-export type Input = _Buffer | Iterable<_Buffer> | AsyncIterable<_Buffer>;
+export type Message = _Buffer | Iterable<_Buffer> | AsyncIterable<_Buffer>;
 
-const _ResolveBuffer = async (input: Input) => { 
-  if (_.isString(input)) return stringToBuffer(input);
-  if (Symbol.iterator in input) {
-    const buffers = iterableToArray(input);
+const isMessage = (x: Awaitable<Message>): x is Message => _.isString(x) || isBinaryData(x) || Symbol.iterator in x || Symbol.asyncIterator in x;
+
+const _resolveBuffer = async (msg: Message) => { 
+  if (_.isString(msg)) return stringToBuffer(msg);
+  if (Symbol.iterator in msg) {
+    const buffers = iterableToArray(msg);
     return Buffer.concat(_.map(buffers, x => _.isString(x) ? stringToBuffer(x) : binaryToBuffer(x)))
   }
-  if (Symbol.asyncIterator in input) {
-    const buffers = await asyncIterableToArray(input);
+  if (Symbol.asyncIterator in msg) {
+    const buffers = await asyncIterableToArray(msg);
     return Buffer.concat(_.map(buffers, x => _.isString(x) ? stringToBuffer(x) : binaryToBuffer(x)))
   }
-  return binaryToBuffer(input);
+  return binaryToBuffer(msg);
 }
 
-export const WebResolveBuffer = async (
-  input: Awaitable<Input>,
+export const resolveBuffer = async (
+  msg: Awaitable<Message>,
 ) => {
-  if (
-    _.isString(input) || isBinaryData(input) ||
-    Symbol.iterator in input || Symbol.asyncIterator in input
-  ) {
-    return _ResolveBuffer(input);
+  return isMessage(msg) ? _resolveBuffer(msg) : _resolveBuffer(await msg);
+}
+
+export const resolveBufferStream = async function* (msg: Awaitable<Message>) { 
+  const _msg = isMessage(msg) ? msg : await msg;
+  if (_.isString(_msg)) { 
+    yield stringToBuffer(_msg);
+  } else if (Symbol.iterator in _msg) {
+    for (const chunk of _msg) yield _.isString(chunk) ? stringToBuffer(chunk) : binaryToBuffer(chunk);
+  } else if (Symbol.asyncIterator in _msg) {
+    for await (const chunk of _msg) yield _.isString(chunk) ? stringToBuffer(chunk) : binaryToBuffer(chunk);
+  } else {
+    yield binaryToBuffer(_msg);
   }
-  return _ResolveBuffer(await input);
 }

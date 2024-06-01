@@ -26,6 +26,7 @@
 import _ from 'lodash';
 import type { createHash } from 'node:crypto';
 import { binaryToBuffer, stringToBuffer } from '@o2ter/utils-js';
+import { Message, resolveBuffer, resolveBufferStream } from './buffer';
 
 const algMap = {
   'sha1': 'SHA-1',
@@ -34,20 +35,19 @@ const algMap = {
   'sha512': 'SHA-512',
 };
 
-const WebDigest = (alg: keyof typeof algMap) => (
-  message: BinaryData | string,
+const WebDigest = (alg: keyof typeof algMap) => async (
+  message: Message,
 ) => {
-  const _message = _.isString(message) ? stringToBuffer(message) : message;
+  const _message = await resolveBuffer(message);
   return crypto.subtle.digest(algMap[alg], _message);
 }
 
 const NodeDigest = (alg: keyof typeof algMap) => async (
-  message: BinaryData | string,
+  message: Message,
 ) => {
   const _createHash = require('node:crypto').createHash as typeof createHash;
-  const _message = _.isString(message) ? stringToBuffer(message) : message;
   const hash = _createHash(alg);
-  hash.update(binaryToBuffer(_message));
+  for await (const chunk of resolveBufferStream(message)) hash.update(chunk);
   return hash.digest();
 }
 
