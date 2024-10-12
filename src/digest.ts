@@ -25,7 +25,6 @@
 
 import _ from 'lodash';
 import type { createHash } from 'node:crypto';
-import { binaryToBuffer, stringToBuffer } from '@o2ter/utils-js';
 import { Message, resolveBuffer, resolveBufferStream } from './buffer';
 
 const algMap = {

@@ -31,6 +31,7 @@ import {
   iterableToArray,
   asyncIterableToArray,
   isBinaryData,
+  BinaryData,
 } from '@o2ter/utils-js';
 
 type _Buffer = BinaryData | string;
