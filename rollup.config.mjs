@@ -42,7 +42,7 @@ export default [
         entryFileNames: '[name].js',
         chunkFileNames: 'internals/[name]-[hash].js',
         dir: './dist',
-        format: 'es',
+        format: 'cjs',
         sourcemap: true,
       },
       {
