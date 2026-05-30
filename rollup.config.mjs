@@ -44,6 +44,7 @@ export default [
         dir: './dist',
         format: 'cjs',
         sourcemap: true,
+        interop: 'auto',
       },
       {
         entryFileNames: '[name].mjs',
