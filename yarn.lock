@@ -1287,12 +1287,12 @@
     "@jridgewell/resolve-uri" "^3.1.0"
     "@jridgewell/sourcemap-codec" "^1.4.14"
 
-"@o2ter/utils-js@^0.0.12":
-  version "0.0.12"
-  resolved "https://registry.yarnpkg.com/@o2ter/utils-js/-/utils-js-0.0.12.tgz#fede4220b05792316cb1ca808448d906f2b69acb"
-  integrity sha512-tF+6OEDq+OeC6iN4mgxzp7oCRGSaKiBOTAQG4r3Oga+eDMH5xIV0Zzs7cozsmebE91d2ioc4c/jgwBcCeFZMLw==
+"@o2ter/utils-js@^0.0.24":
+  version "0.0.24"
+  resolved "https://registry.yarnpkg.com/@o2ter/utils-js/-/utils-js-0.0.24.tgz#f79917f5d9bf6c40525ba49e67d4baaf93f5c236"
+  integrity sha512-c48HHfZTZ/ekJJYH/chROKHwuy35bxYPAqc1TAsN5xjhv25QYr8M+zeuTvTtUxpkhS9QZaJKFZl+qxKWeTMWug==
   dependencies:
-    lodash ">=4.17.21"
+    lodash ">=4.18.1"
 
 "@rollup/plugin-babel@^6.0.4":
   version "6.0.4"
@@ -2730,7 +2730,7 @@ lodash.memoize@4.x:
   resolved "https://registry.yarnpkg.com/lodash.memoize/-/lodash.memoize-4.1.2.tgz#bcc6c49a42a2840ed997f323eada5ecd182e0bfe"
   integrity sha512-t7j+NzmgnQzTAYXcsHYLgimltOV1MXHtlOWf6GjL9Kj8GK5FInw5JotxvbOs+IvV1/Dzo04/fCGfLVs7aXb4Ag==
 
-lodash@>=4.17.21, lodash@>=4.18.1:
+lodash@>=4.18.1:
   version "4.18.1"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.18.1.tgz#ff2b66c1f6326d59513de2407bf881439812771c"
   integrity sha512-dMInicTPVE8d1e5otfwmmjlxkZoUpiVLwyeTdUsi/Caj/gfzzblBcCE5sRHV/AsjuCmxWrte2TNGSYuCeCq+0Q==
